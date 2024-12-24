@@ -105,7 +105,7 @@ const ChangePasswordForm = () => {
           </div>
 
           <div className="w-full mx-auto mt-6">
-            <div className="bg-white">
+            <div>
               {/* Password */}
               <div className='mb-5'>
                 <label htmlFor="password" className="my-2 system-md-semibold text-text-secondary">

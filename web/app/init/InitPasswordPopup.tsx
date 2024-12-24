@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useRouter } from 'next/navigation'
 import Toast from '../components/base/toast'
 import Loading from '../components/base/loading'
+import Input from '../components/base/input'
 import Button from '@/app/components/base/button'
 import { fetchInitValidateStatus, initValidate } from '@/service/common'
 import type { InitValidateStatusResponse } from '@/models/common'
@@ -54,17 +55,16 @@ const InitPasswordPopup = () => {
         {!validated && (
           <div className="block mx-12 min-w-28">
             <div className="mb-4">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block system-sm-medium text-text-secondary">
                 {t('login.adminInitPassword')}
 
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
-                <input
+                <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
             </div>

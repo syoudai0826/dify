@@ -6,10 +6,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import type { SubmitHandler } from 'react-hook-form'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Loading from '../components/base/loading'
+import Input from '../components/base/input'
 import classNames from '@/utils/classnames'
 import Button from '@/app/components/base/button'
 
@@ -37,7 +38,7 @@ const InstallForm = () => {
   const [showPassword, setShowPassword] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<AccountFormValues>({
@@ -50,6 +51,7 @@ const InstallForm = () => {
   })
 
   const onSubmit: SubmitHandler<AccountFormValues> = async (data) => {
+    console.log(data)
     await setup({
       body: {
         ...data,
@@ -63,102 +65,106 @@ const InstallForm = () => {
   }
 
   useEffect(() => {
-    fetchSetupStatus().then((res: SetupStatusResponse) => {
-      if (res.step === 'finished') {
-        localStorage.setItem('setup_status', 'finished')
-        window.location.href = '/signin'
-      }
-      else {
-        fetchInitValidateStatus().then((res: InitValidateStatusResponse) => {
-          if (res.status === 'not_started')
-            window.location.href = '/init'
-        })
-      }
+    try {
+      fetchSetupStatus().then((res: SetupStatusResponse) => {
+        if (res.step === 'finished') {
+          localStorage.setItem('setup_status', 'finished')
+          window.location.href = '/signin'
+        }
+        else {
+          fetchInitValidateStatus().then((res: InitValidateStatusResponse) => {
+            if (res.status === 'not_started')
+              window.location.href = '/init'
+          })
+        }
+        setLoading(false)
+      })
+    }
+    catch (error) {
+      console.error(error)
       setLoading(false)
-    })
+    }
   }, [])
 
   return (
-    loading
+    !loading
       ? <Loading />
       : <>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="text-[32px] font-bold text-gray-900">{t('login.setAdminAccount')}</h2>
+          <h2 className="text-[32px] font-bold text-text-primary">{t('login.setAdminAccount')}</h2>
           <p className='
-          mt-1 text-sm text-gray-600
+          mt-1 text-sm text-text-secondary
         '>{t('login.setAdminAccountDesc')}</p>
         </div>
         <div className="grow mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white ">
+          <div>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className='mb-5'>
-                <label htmlFor="email" className="my-2 flex items-center justify-between text-sm font-medium text-gray-900">
+                <label htmlFor="email" className="my-2 flex items-center justify-between system-sm-medium text-text-primary">
                   {t('login.email')}
                 </label>
                 <div className="mt-1">
-                  <input
-                    {...register('email')}
-                    placeholder={t('login.emailPlaceholder') || ''}
-                    className={'appearance-none block w-full rounded-lg pl-[14px] px-3 py-2 border border-gray-200 hover:border-gray-300 hover:shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 placeholder-gray-400 caret-primary-600 sm:text-sm'}
+                  <Controller name='email'
+                    control={control}
+                    render={({ field }) =>
+                      <Input {...field} placeholder={t('login.emailPlaceholder') || ''} />}
                   />
-                  {errors.email && <span className='text-red-400 text-sm'>{t(`${errors.email?.message}`)}</span>}
+                  {errors.email && <span className='text-text-warning text-sm'>{t(`${errors.email?.message}`)}</span>}
                 </div>
-
               </div>
-
               <div className='mb-5'>
-                <label htmlFor="name" className="my-2 flex items-center justify-between text-sm font-medium text-gray-900">
+                <label htmlFor="name" className="my-2 flex items-center justify-between system-sm-medium text-text-primary">
                   {t('login.name')}
                 </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <input
-                    {...register('name')}
-                    placeholder={t('login.namePlaceholder') || ''}
-                    className={'appearance-none block w-full rounded-lg pl-[14px] px-3 py-2 border border-gray-200 hover:border-gray-300 hover:shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 placeholder-gray-400 caret-primary-600 sm:text-sm pr-10'}
-                  />
+                <div className="mt-1">
+                  <Controller name='name'
+                    control={control}
+                    render={({ field }) =>
+                      <Input {...field} placeholder={t('login.namePlaceholder') || ''}
+                      />} />
                 </div>
-                {errors.name && <span className='text-red-400 text-sm'>{t(`${errors.name.message}`)}</span>}
+                {errors.name && <span className='text-text-warning text-sm'>{t(`${errors.name.message}`)}</span>}
               </div>
 
               <div className='mb-5'>
-                <label htmlFor="password" className="my-2 flex items-center justify-between text-sm font-medium text-gray-900">
+                <label htmlFor="password" className="my-2 flex items-center justify-between system-sm-medium text-text-primary">
                   {t('login.password')}
                 </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <input
-                    {...register('password')}
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder={t('login.passwordPlaceholder') || ''}
-                    className={'appearance-none block w-full rounded-lg pl-[14px] px-3 py-2 border border-gray-200 hover:border-gray-300 hover:shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 placeholder-gray-400 caret-primary-600 sm:text-sm pr-10'}
-                  />
 
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500"
-                    >
-                      {showPassword ? '👀' : '😝'}
-                    </button>
-                  </div>
+                <div className="mt-1">
+                  <Controller name='password' control={control} render={({ field }) =>
+                    <div className='relative'>
+                      <Input
+                        {...field}
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder={t('login.passwordPlaceholder') || ''}
+                      />
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? '👀' : '😝'}
+                        </button>
+                      </div>
+                    </div>
+                  } />
                 </div>
-
-                <div className={classNames('mt-1 text-xs text-gray-500', {
-                  'text-red-400 !text-sm': errors.password,
+                <div className={classNames('mt-1 system-xs-regular', {
+                  'text-text-warning ': errors.password,
                 })}>{t('login.error.passwordInvalid')}</div>
               </div>
-
               <div>
                 <Button variant='primary' className='w-full' onClick={handleSetting}>
                   {t('login.installBtn')}
                 </Button>
               </div>
             </form>
-            <div className="block w-full mt-2 text-xs text-gray-600">
+            <div className="block w-full mt-2 system-xs-regular text-text-secondary">
               {t('login.license.tip')}
               &nbsp;
               <Link
-                className='text-primary-600'
+                className='text-text-accent'
                 target='_blank' rel='noopener noreferrer'
                 href={'https://docs.dify.ai/user-agreement/open-source'}
               >{t('login.license.link')}</Link>

@@ -15,13 +15,13 @@ const Install = () => {
     )}>
       <div className={
         classNames(
-          'flex w-full flex-col bg-white shadow rounded-2xl shrink-0',
+          'flex w-full flex-col bg-background-default-subtle border border-effects-highlight rounded-2xl shrink-0',
           'md:w-[608px] space-between',
         )
       }>
         <Header />
         <InstallForm />
-        <div className='px-8 py-6 text-sm font-normal text-gray-500'>
+        <div className='px-8 py-6 system-xs-regular text-text-tertiary'>
           © {new Date().getFullYear()} LangGenius, Inc. All rights reserved.
         </div>
       </div>
