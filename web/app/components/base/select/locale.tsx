@@ -21,12 +21,11 @@ export default function Select({
     <div className="w-56 text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-full h-[44px]justify-center items-center
-          rounded-lg px-[10px] py-[6px]
-          text-gray-900 text-[13px] font-medium
-          border border-gray-200
-          hover:bg-gray-100">
-            <GlobeAltIcon className="w-5 h-5 mr-1" aria-hidden="true" />
+          <Menu.Button className="inline-flex w-full h-8 justify-center items-center
+          rounded-lg px-2 py-1
+          text-text-tertiary system-sm-medium
+          hover:bg-state-base-hover-alt">
+            <GlobeAltIcon className="w-4 h-4 mr-0.5" aria-hidden="true" />
             {item?.name}
           </Menu.Button>
         </div>
@@ -39,21 +38,21 @@ export default function Select({
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 mt-2 w-[200px] origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-            <div className="px-1 py-1 ">
+          <Menu.Items className="absolute right-0 mt-2 w-[200px] origin-top-right
+              rounded-xl border-[0.5px] border-components-panel-border bg-components-panel-bg-blur backdrop-blur-[5px] shadow-lg z-10">
+            <div className="px-1 py-1">
               {items.map((item) => {
                 return <Menu.Item key={item.value}>
                   {({ active }) => (
-                    <button
-                      className={`${active ? 'bg-gray-100' : ''
-                      } group flex w-full items-center rounded-lg px-3 py-2 text-sm text-gray-700`}
+                    <div
+                      className={`${active ? 'bg-state-base-hover' : ''} group flex w-full items-center rounded-lg px-3 py-2 system-sm-medium text-text-secondary`}
                       onClick={(evt) => {
                         evt.preventDefault()
                         onChange && onChange(item.value)
                       }}
                     >
                       {item.name}
-                    </button>
+                    </div>
                   )}
                 </Menu.Item>
               })}
@@ -96,8 +95,7 @@ export function InputSelect({
                 return <Menu.Item key={item.value}>
                   {({ active }) => (
                     <button
-                      className={`${active ? 'bg-gray-100' : ''
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      className={`${active ? 'bg-gray-100' : ''} group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       onClick={() => {
                         onChange && onChange(item.value)
                       }}
